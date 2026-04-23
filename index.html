@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vacation Planner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="authOverlay" class="auth-overlay">
+      <form id="unlockForm" class="panel auth-panel">
+        <p class="eyebrow">Secure Access</p>
+        <h1>Vacation Planner</h1>
+        <p class="muted">Enter password to unlock your travel dashboard.</p>
+        <label for="passwordInput">Password</label>
+        <input id="passwordInput" type="password" required autocomplete="current-password" placeholder="••••" />
+        <button type="submit">Unlock Planner</button>
+        <p id="authError" class="error hidden">Incorrect password. Please try again.</p>
+        <small class="muted">Default password: <strong>1234</strong></small>
+      </form>
+    </div>
+
+    <div class="app-shell">
+      <aside class="sidebar panel">
+        <div class="brand">
+          <div class="brand-icon">✈</div>
+          <div>
+            <h1>Vacation Planner</h1>
+            <p class="muted">Design every trip in detail</p>
+          </div>
+        </div>
+
+        <section>
+          <div class="section-heading">
+            <h2>Vacations</h2>
+            <span id="vacationCountBadge" class="badge"></span>
+          </div>
+          <ul id="vacationList" class="vacation-list"></ul>
+        </section>
+
+        <section>
+          <h3>Create New Vacation</h3>
+          <form id="vacationForm" class="stack">
+            <label>Name<input name="name" required placeholder="Spain Summer 2027" /></label>
+            <label>Destination<input name="destination" required placeholder="Barcelona, Spain" /></label>
+            <div class="row">
+              <label>Start<input name="startDate" type="date" required /></label>
+              <label>End<input name="endDate" type="date" required /></label>
+            </div>
+            <div class="row">
+              <label>Budget<input name="budget" type="number" min="0" step="0.01" placeholder="2500" /></label>
+              <label>Currency<input name="currency" placeholder="USD" value="USD" maxlength="5" /></label>
+            </div>
+            <button type="submit">Create Vacation</button>
+          </form>
+        </section>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar panel">
+          <div>
+            <p class="eyebrow">Trip Workspace</p>
+            <h2 id="vacationTitle">Select a vacation</h2>
+          </div>
+          <div class="topbar-actions">
+            <span id="syncStatus" class="sync-status">Sync: Connecting...</span>
+            <button id="syncNowBtn" class="btn-secondary">Sync now</button>
+            <button id="changePasswordBtn" class="btn-secondary">Change Password</button>
+            <button id="deleteVacationBtn" class="btn-danger hidden">Delete Vacation</button>
+          </div>
+        </header>
+
+        <section id="emptyState" class="panel empty-state">
+          <h3>No vacation selected yet</h3>
+          <p class="muted">Create a vacation from the left panel to start planning budget, places, bookings, todos, and logistics.</p>
+        </section>
+
+        <section id="plannerPane" class="planner hidden">
+          <div class="quick-stats">
+            <article class="panel stat-card">
+              <p class="muted">Budget Planned</p>
+              <h3 id="statPlanned">$0</h3>
+            </article>
+            <article class="panel stat-card">
+              <p class="muted">Budget Remaining</p>
+              <h3 id="statRemaining">$0</h3>
+            </article>
+            <article class="panel stat-card">
+              <p class="muted">Places Added</p>
+              <h3 id="statPlaces">0</h3>
+            </article>
+            <article class="panel stat-card">
+              <p class="muted">Open Todos</p>
+              <h3 id="statTodos">0</h3>
+            </article>
+          </div>
+
+          <section class="panel">
+            <div class="section-heading">
+              <h3>Vacation Details</h3>
+              <p class="muted">Core trip information and goals</p>
+            </div>
+            <form id="vacationMetaForm" class="stack">
+              <div class="row">
+                <label>Destination<input name="destination" /></label>
+                <label>Travelers<input name="travelers" placeholder="2 adults" /></label>
+              </div>
+              <div class="row">
+                <label>Start Date<input name="startDate" type="date" /></label>
+                <label>End Date<input name="endDate" type="date" /></label>
+              </div>
+              <div class="row">
+                <label>Total Budget<input name="budget" type="number" min="0" step="0.01" /></label>
+                <label>Currency<input name="currency" maxlength="5" /></label>
+              </div>
+              <label>Trip Goals & Notes<textarea name="notes" rows="3" placeholder="Must-do experiences, overall style, key reminders..."></textarea></label>
+              <button type="submit">Save Vacation Details</button>
+            </form>
+          </section>
+
+          <div class="planning-grid">
+            <article class="panel">
+              <div class="section-heading"><h3>Places to Visit</h3></div>
+              <form id="placeForm" class="stack compact">
+                <input name="name" required placeholder="Camp Nou" />
+                <input name="address" placeholder="Address" />
+                <input name="mapLink" type="url" placeholder="Google Maps link" />
+                <div class="row">
+                  <input name="estimatedCost" type="number" min="0" step="0.01" placeholder="Estimated cost" />
+                  <input name="bestTime" placeholder="Best time/day" />
+                </div>
+                <input name="todo" placeholder="Todo for this place" />
+                <textarea name="notes" rows="2" placeholder="Extra details"></textarea>
+                <button type="submit">Add Place</button>
+              </form>
+              <ul id="placeList" class="item-list"></ul>
+            </article>
+
+            <article class="panel">
+              <div class="section-heading"><h3>Budget Items</h3></div>
+              <form id="expenseForm" class="stack compact">
+                <input name="label" required placeholder="Hotel" />
+                <div class="row">
+                  <input name="category" placeholder="Category" />
+                  <input name="amount" type="number" required min="0" step="0.01" placeholder="Amount" />
+                </div>
+                <input name="paidBy" placeholder="Paid by" />
+                <button type="submit">Add Expense</button>
+              </form>
+              <p id="budgetSummary" class="summary"></p>
+              <ul id="expenseList" class="item-list"></ul>
+            </article>
+
+            <article class="panel">
+              <div class="section-heading"><h3>Trip Todos</h3></div>
+              <form id="todoForm" class="stack compact">
+                <input name="task" required placeholder="Book Sagrada Familia tickets" />
+                <div class="row">
+                  <input name="dueDate" type="date" />
+                  <select name="priority">
+                    <option>Low</option>
+                    <option selected>Medium</option>
+                    <option>High</option>
+                  </select>
+                </div>
+                <button type="submit">Add Todo</button>
+              </form>
+              <ul id="todoList" class="item-list"></ul>
+            </article>
+
+            <article class="panel">
+              <div class="section-heading"><h3>Bookings & Transport</h3></div>
+              <form id="bookingForm" class="stack compact">
+                <input name="type" required placeholder="Flight / Train / Hotel / Rental" />
+                <input name="provider" placeholder="Provider" />
+                <input name="confirmation" placeholder="Confirmation code" />
+                <input name="link" type="url" placeholder="Booking link" />
+                <button type="submit">Add Booking</button>
+              </form>
+              <ul id="bookingList" class="item-list"></ul>
+            </article>
+
+            <article class="panel">
+              <div class="section-heading"><h3>Packing List</h3></div>
+              <form id="packingForm" class="stack compact">
+                <input name="item" required placeholder="Passport" />
+                <button type="submit">Add Item</button>
+              </form>
+              <ul id="packingList" class="item-list"></ul>
+            </article>
+
+            <article class="panel">
+              <div class="section-heading"><h3>Important Contacts</h3></div>
+              <form id="contactForm" class="stack compact">
+                <input name="name" required placeholder="Hotel front desk" />
+                <input name="phone" placeholder="Phone" />
+                <input name="details" placeholder="Email / address / notes" />
+                <button type="submit">Add Contact</button>
+              </form>
+              <ul id="contactList" class="item-list"></ul>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="passwordDialog">
+      <form id="passwordForm" method="dialog" class="stack dialog-form">
+        <h3>Change Password</h3>
+        <label>Current Password<input name="current" type="password" required /></label>
+        <label>New Password<input name="next" type="password" minlength="4" required /></label>
+        <menu>
+          <button value="cancel" class="btn-secondary">Cancel</button>
+          <button value="default">Save Password</button>
+        </menu>
+        <p id="passwordMessage" class="muted"></p>
+      </form>
+    </dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>
