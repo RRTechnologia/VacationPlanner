@@ -1,44 +1,45 @@
-# Vacation Planner
+# Vacation Planner (Professional Dashboard + JSON Storage)
 
-A polished, responsive, fully static vacation planning website that runs locally and can be hosted on GitHub Pages.
+A polished, responsive vacation planning web app with a local Node server and JSON-file storage, so your plans can be shared across multiple devices.
 
-## Highlights
+## What changed
 
-- Password gate on app open (default `1234`, changeable in-app).
-- Multi-vacation dashboard with modern UI/UX and responsive layout.
-- Detailed planning per vacation:
-  - Core trip details (destination, dates, travelers, goals)
-  - Places to visit (address, maps link, estimated cost, todos, notes)
-  - Budget tracking (planned vs remaining)
-  - Trip todos with due date/priority and completion toggle
-  - Bookings and transportation records
-  - Packing checklist
-  - Important contacts
-- Data persistence with browser `localStorage`.
+- Professional dashboard-style UI for managing multiple vacations.
+- Data is now persisted in JSON files:
+  - `data/vacations.json`
+  - `data/settings.json`
+- Password gate is server-backed (`settings.json`) so all connected devices use the same password.
+- Manual + auto sync to the JSON backend API.
 
 ## Run locally
 
-Option 1: Open `index.html` directly in your browser.
-
-Option 2 (recommended): start a static server:
-
 ```bash
-python3 -m http.server 8000
+npm start
 ```
 
-Then open <http://localhost:8000>.
+Then open:
 
-## Host on GitHub Pages
+- `http://localhost:3000`
 
-1. Push repository to GitHub.
-2. Open **Settings → Pages**.
-3. Choose **Deploy from a branch**.
-4. Select your default branch and `/ (root)`.
-5. Save. Your URL will be: `https://<username>.github.io/<repo>/`.
+## Multi-device usage
 
-## Security note
+To use multiple devices:
 
-This app is client-side only. Password and vacation data are stored in browser storage (local device/browser profile), not on a secure backend.
-## Latest update
+1. Run this app on one machine/server that is always online.
+2. Make sure that machine is reachable on your network (or internet).
+3. Open `http://<server-ip>:3000` from your other devices.
+4. All devices read/write the same JSON files on that server.
 
-This version includes the refreshed dashboard layout with quick stats, improved card styling, and mobile-first responsiveness.
+## Project structure
+
+- `index.html` — UI and layout
+- `styles.css` — responsive styling and components
+- `app.js` — frontend logic + API sync
+- `server.js` — lightweight Node HTTP API + static hosting
+- `data/vacations.json` — shared planner data
+- `data/settings.json` — shared password
+
+## Notes
+
+- This is not end-to-end encrypted and not production-auth hardened.
+- For internet exposure, put this behind HTTPS + proper authentication.

@@ -1,0 +1,9 @@
+{
+  "name": "vacation-planner",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vacation planner with JSON file storage for multi-device usage",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
