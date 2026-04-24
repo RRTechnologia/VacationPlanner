@@ -4,7 +4,7 @@ A polished, responsive vacation planning web app with a local Node server and JS
 
 ## What changed
 
-- Professional dashboard-style UI for managing multiple vacations.
+- High-end, minimalistic dashboard UI for managing multiple vacations.
 - Data is now persisted in JSON files:
   - `data/vacations.json`
   - `data/settings.json`
